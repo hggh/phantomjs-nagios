@@ -13,6 +13,7 @@ options[:snifferjs] = "netsniff.js"
 options[:warning]   = 1.0
 options[:critical]  = 2.0
 options[:html] = false
+options[:request_range] = false
 
 OptionParser.new do |opts|
 	opts.banner = "Usage: #{$0} [options]"
@@ -34,6 +35,18 @@ OptionParser.new do |opts|
 	end
 	opts.on("-e", "--html", "Add html tags to output url") do |e|
 		options[:html] = true
+	end
+	opts.on("-r", "--request [RANGE]", "Check if requests is in range [50:100] (default: not checked)") do |r|
+		begin
+			if r =~ /^(\d+):(\d+)$/ and $1.to_i < $2.to_i
+				options[:request_range] = [ $1.to_i, $2.to_i ]
+			else
+				raise
+			end
+		rescue
+			puts "Please use --request 50:100"
+			exit 3
+		end
 	end
 end.parse!
 
@@ -86,6 +99,8 @@ end
 if website_load_time.to_f > options[:critical].to_f
 	puts "Critical: #{website_url_info} load time: #{website_load_time.to_s}" + performance_data
 	exit 2
+elsif options[:request_range] and !request_count.between?(options[:request_range][0], options[:request_range][1])
+	puts "Critical: #{website_url_info} load time: #{website_load_time.to_s} (Requests cirtical: #{request_count.to_s}) " + performance_data
 elsif website_load_time.to_f > options[:warning].to_f
 	puts "Warning: #{website_url_info} load time: #{website_load_time.to_s}" + performance_data
 	exit 1
