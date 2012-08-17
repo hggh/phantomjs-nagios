@@ -9,7 +9,7 @@ require 'timeout'
 options = {}
 options[:phantomjs_bin] = "/usr/bin/phantomjs"
 options[:phantomjs_opts] = "--load-images=yes --local-to-remote-url-access=yes --disk-cache=no --ignore-ssl-errors=yes"
-options[:snifferjs] = "netsniff.js"
+options[:snifferjs] = File.join(File.dirname(__FILE__), "netsniff.js")
 options[:warning]   = 1.0
 options[:critical]  = 2.0
 options[:html] = false
