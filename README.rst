@@ -14,19 +14,27 @@ This test fetchs also all images/css/js files.
 Command line
 ++++++++++++
 
-- -u http://www.fotokasten.de/
+- -u http://www.fahrrad.de/
 - -c 2.0 ``[second]``
 - -w 1.0 ``[second]``
+- -e
 
 run check
 +++++++++
-	./check_http_load_time.rb -u http://www.fotokasten.de -c 5 -w 4
+	check_http_load_time.rb -u http://www.fahrrad.de -w 1.9 -c 2.5 -e
 
-	OK: http://www.fotokasten.de load time: 2.51 | load_time=2.51
+	OK: <a href='http://www.fahrrad.de'>http://www.fahrrad.de</a> load time: 1.78 | load_time=1776.0ms size=591152 requests=99 dom_elements=997
+
+Nagios/Icinga performance data
+++++++++++++++++++++++++++++++
+
+- load_time: load time of complete website in ms
+- size: complete size of all downloaded files in byte
+- requests: count of files (css,js,html,...)
+- dom_elements: count of all DOM elements on the site
 
 Contact?
 ++++++++
 Jonas Genannt / http://blog.brachium-system.net
 
 .. _PhantomJS: http://www.phantomjs.org/
-.. _Xvfb: http://code.google.com/p/phantomjs/wiki/XvfbSetup
