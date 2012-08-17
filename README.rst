@@ -22,9 +22,9 @@ Command line
 requirements to run phantomjs-nagios
 ++++++++++++++++++++++++++++++++
 
- - ruby 1.8
- - ruby-json
- - PhantomJS 1.6 or higher (check_http_load_time.rb does not support Xvfb)
+- ruby 1.8
+- ruby-json
+- PhantomJS 1.6 or higher (check_http_load_time.rb does not support Xvfb)
 
 run check
 +++++++++
