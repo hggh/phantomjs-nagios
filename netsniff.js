@@ -12,7 +12,7 @@ if (!Date.prototype.toISOString) {
     }
 }
 
-function createHAR(address, title, startTime, resources, endTime)
+function createHAR(address, title, startTime, resources, endTime, dom_element_count)
 {
    var bodySize = 0;
    resources.forEach(function (resource) {
@@ -38,6 +38,7 @@ function createHAR(address, title, startTime, resources, endTime)
                id: address,
                size: bodySize,
                resourcesCount: resources.length,
+               domElementsCount: dom_element_count,
                title: title,
                pageTimings: {}
             }],
@@ -85,7 +86,10 @@ else {
 
    page.onLoadFinished = function (status) {
       var har;
-      har = createHAR(page.address, page.title, page.startTime, page.resources, new Date());
+      var dom_element_count = page.evaluate(function (s) {
+         return document.getElementsByTagName('*').length;
+      });
+      har = createHAR(page.address, page.title, page.startTime, page.resources, new Date(), dom_element_count);
       console.log(JSON.stringify(har, undefined, 4));
       phantom.exit();
    };
