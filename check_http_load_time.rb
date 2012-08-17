@@ -17,9 +17,6 @@ options[:html] = false
 OptionParser.new do |opts|
 	opts.banner = "Usage: #{$0} [options]"
 
-	opts.on("-s", "--sniffer [STRING]", "path to phantomjs netsniff" ) do |s|
-		options[:snifferjs] = s
-	end
 	opts.on("-u", "--url [STRING]", "URL to query" ) do |u|
 		options[:url] = u
 	end
