@@ -14,6 +14,7 @@ options[:warning]   = 1.0
 options[:critical]  = 2.0
 options[:html] = false
 options[:request_range] = false
+options[:debug] = false
 
 OptionParser.new do |opts|
 	opts.banner = "Usage: #{$0} [options]"
@@ -35,6 +36,9 @@ OptionParser.new do |opts|
 	end
 	opts.on("-e", "--html", "Add html tags to output url") do
 		options[:html] = true
+	end
+	opts.on("-d", "--debug", "Enable debug output") do
+		options[:debug] = true
 	end
 	opts.on("-r", "--request [RANGE]", "Check if requests is in range [50:100] (default: not checked)") do |r|
 		begin
@@ -62,7 +66,14 @@ website_load_time = 0.0
 output = ""
 begin
 	Timeout::timeout(options[:critical].to_i) do
-		@pipe = IO.popen(options[:phantomjs_bin] + " " + options[:phantomjs_opts]  + " " + options[:snifferjs] + " " + website_url.to_s + " 2> /dev/null")
+		cmd = Array.new
+		cmd << options[:phantomjs_bin]
+		cmd << options[:phantomjs_opts]
+		cmd << options[:snifferjs]
+		cmd << website_url.to_s
+		cmd << "2> /dev/null"
+		warn "PhantomJS cmd is: " + cmd.join(" ") if options[:debug]
+		@pipe = IO.popen(cmd.join(" "))
 		output = @pipe.read
 		Process.wait(@pipe.pid)
 	end
@@ -74,6 +85,7 @@ rescue Timeout::Error => e
 end
 
 begin
+	warn "JSON Output:\n" + output if options[:debug]
 	hash = JSON.parse(output)
 rescue
 	puts "Unkown: Could not parse JSON from phantomjs"
