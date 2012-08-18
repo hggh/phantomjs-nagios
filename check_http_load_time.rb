@@ -83,13 +83,13 @@ end
 request_global_time_start = Time.iso8601(hash['log']['pages'][0]['startedDateTime'])
 request_global_time_end   = Time.iso8601(hash['log']['pages'][0]['endedDateTime'])
 request_size = hash['log']['pages'][0]['size']
-request_count = hash['log']['pages'][0]['resourcesCount']
-dom_element_count = hash['log']['pages'][0]['domElementsCount']
+request_count = hash['log']['pages'][0]['resourcesCount'].to_i
+dom_element_count = hash['log']['pages'][0]['domElementsCount'].to_i
 
 website_load_time = '%.2f' % (request_global_time_end - request_global_time_start)
 website_load_time_ms = (request_global_time_end - request_global_time_start) * 1000
 
-performance_data = " | load_time=#{website_load_time_ms.to_s}ms size=#{request_size} requests=#{request_count.to_s} dom_elements=#{dom_element_count}"
+performance_data = " | load_time=#{website_load_time_ms.to_s}ms size=#{request_size} requests=#{request_count.to_s} dom_elements=#{dom_element_count.to_s}"
 
 website_url_info = website_url.to_s
 if options[:html]
