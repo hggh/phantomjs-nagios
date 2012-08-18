@@ -78,7 +78,7 @@ begin
 		Process.wait(@pipe.pid)
 	end
 rescue Timeout::Error => e
-        puts "Critical: #{website_url.to_s}: Timeout after: #{options[:critical]}"
+	puts "Critical: #{website_url.to_s}: Timeout after: #{options[:critical]}"
 	Process.kill(9, @pipe.pid)
 	Process.wait(@pipe.pid)
 	exit 2
