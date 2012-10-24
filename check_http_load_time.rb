@@ -65,7 +65,7 @@ website_load_time = 0.0
 # Run Phantom
 output = ""
 begin
-	Timeout::timeout(options[:critical].to_i) do
+	Timeout::timeout(options[:critical].to_i + 3) do
 		cmd = Array.new
 		cmd << options[:phantomjs_bin]
 		cmd << options[:phantomjs_opts]
