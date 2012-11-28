@@ -9,6 +9,7 @@ require 'timeout'
 options = {}
 options[:phantomjs_bin] = "/usr/bin/phantomjs"
 options[:phantomjs_opts] = "--load-images=yes --local-to-remote-url-access=yes --disk-cache=no --ignore-ssl-errors=yes"
+options[:phantomjs_extra_ops] = [ ]
 options[:snifferjs] = File.join(File.dirname(__FILE__), "netsniff.js")
 options[:warning]   = 1.0
 options[:critical]  = 2.0
@@ -40,6 +41,9 @@ OptionParser.new do |opts|
 	opts.on("-d", "--debug", "Enable debug output") do
 		options[:debug] = true
 	end
+	opts.on("-l", "--ps-extra-opts [STRING]", "Extra PhantomJS Options (default: no options) [eg -l 'debug' -l 'proxy=localhost']") do |l|
+		options[:phantomjs_extra_ops] << "--" + l.to_s
+	end
 	opts.on("-r", "--request [RANGE]", "Check if requests is in range [50:100] (default: not checked)") do |r|
 		begin
 			if r =~ /^(\d+):(\d+)$/ and $1.to_i < $2.to_i
@@ -69,6 +73,7 @@ begin
 		cmd = Array.new
 		cmd << options[:phantomjs_bin]
 		cmd << options[:phantomjs_opts]
+		cmd << options[:phantomjs_extra_ops]
 		cmd << options[:snifferjs]
 		cmd << website_url.to_s
 		cmd << "2> /dev/null"
