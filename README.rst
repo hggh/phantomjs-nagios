@@ -18,12 +18,14 @@ Command line
 - -c 2.0 ``[second]``
 - -w 1.0 ``[second]``
 - -e
-- -l 'debug'
+- -l
 
 PhantomJS Options
 +++++++++++++++++
 
 You can pass-through options from the check_http_load_time.rb to PhantomJS.
+
+Use the -l flag. (eg. -l 'proxy=localhost' for proxy settings on PhantomJS)
 
 Tracking / Social Media on website slows down
 +++++++++++++++++++++++++++++++++++++++++++++
