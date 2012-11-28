@@ -18,6 +18,28 @@ Command line
 - -c 2.0 ``[second]``
 - -w 1.0 ``[second]``
 - -e
+- -l 'debug'
+
+PhantomJS Options
++++++++++++++++++
+
+You can pass-through options from the check_http_load_time.rb to PhantomJS.
+
+Tracking / Social Media on website slows down
++++++++++++++++++++++++++++++++++++++++++++++
+
+If you have social media / tracking stuff on you site that you are monitoring it
+could slow down or alert your site if third party is offline.
+
+You can ignore hosts with an patch from Jonas Genannt.
+
+See: http://code.google.com/p/phantomjs/issues/detail?id=230
+
+Patch: https://github.com/hggh/phantomjs/compare/ignore-host.patch
+
+Afer installing PhantomJS with that patch use:
+
+	-l "ignore-host='(google.com|twitter.com)'
 
 requirements to run phantomjs-nagios
 ++++++++++++++++++++++++++++++++
