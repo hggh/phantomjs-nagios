@@ -83,7 +83,8 @@ begin
 		Process.wait(@pipe.pid)
 	end
 rescue Timeout::Error => e
-	puts "Critical: #{website_url.to_s}: Timeout after: #{options[:critical]}"
+	critical_time_ms = options[:critical].to_i * 1000
+	puts "Critical: #{website_url.to_s}: Timeout after: #{options[:critical]} | load_time=#{critical_time_ms.to_s}"
 	Process.kill(9, @pipe.pid)
 	Process.wait(@pipe.pid)
 	exit 2
