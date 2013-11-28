@@ -40,6 +40,8 @@ function createHAR(address, title, startTime, resources, endTime, dom_element_co
                resourcesCount: resources.length,
                domElementsCount: dom_element_count,
                title: title,
+               jscheck: page.jscheck,
+               jscheckout: page.jscheckout,
                pageTimings: {}
             }],
          }
@@ -55,6 +57,7 @@ if (phantom.args.length === 0) {
 }
 else {
    page.address = phantom.args[0];
+   page.jscheck = phantom.args[1];
    page.settings.userAgent = 'hggh PhantomJS Webspeed Test';
 
    page.resources = [];
@@ -89,6 +92,7 @@ else {
       var dom_element_count = page.evaluate(function (s) {
          return document.getElementsByTagName('*').length;
       });
+      page.jscheckout = page.evaluate(function (){return eval(arguments[0]);},page.jscheck);
       har = createHAR(page.address, page.title, page.startTime, page.resources, new Date(), dom_element_count);
       console.log(JSON.stringify(har, undefined, 4));
       phantom.exit();
