@@ -9,7 +9,7 @@ require 'timeout'
 options = {}
 options[:url] = ""
 options[:phantomjs_bin] = "/usr/bin/phantomjs"
-options[:phantomjs_opts] = "--load-images=yes --local-to-remote-url-access=yes --disk-cache=no --ignore-ssl-errors=yes"
+options[:phantomjs_opts] = "--load-images=yes --local-to-remote-url-access=yes --disk-cache=no"
 options[:phantomjs_extra_ops] = [ ]
 options[:snifferjs] = File.join(File.dirname(__FILE__), "netsniff.js")
 options[:warning]   = 1.0
@@ -17,8 +17,10 @@ options[:critical]  = 2.0
 options[:html] = false
 options[:request_range] = false
 options[:size] = false 
+options[:domelemets] = false 
 options[:perf] = false
 options[:verbosity] = 0
+options[:jscheck] = false
 exitcode = 0
 output = ""
 
@@ -53,6 +55,9 @@ OptionParser.new do |opts|
 	opts.on("-e", "--html", "Add html tags to output url") do
 		options[:html] = true
 	end
+        opts.on("-j", "--jscheck [STRING]", "Js check to eval") do |j|
+                options[:jscheck] = j
+        end
 	opts.on("-l", "--ps-extra-opts [STRING]", "Extra PhantomJS Options (default: no options) [eg -l 'debug' -l 'proxy=localhost']") do |l|
 		options[:phantomjs_extra_ops] << "--" + l.to_s
 	end
@@ -78,6 +83,19 @@ OptionParser.new do |opts|
 			end
 		rescue
 			puts "Please use [-s|--size] min:max"
+			exitcode = setExit(3, exitcode)
+			exit exitcode
+		end
+	end
+	opts.on("-d", "--domelemets [RANGE]", "Check if the number of the site dom elements is in range [1:20000] (default: not checked)") do |s|
+		begin
+			if s =~ /^(\d+):(\d+)$/ and $1.to_i < $2.to_i 
+				options[:domelemets] = [ $1.to_i, $2.to_i ]
+			else
+				raise
+			end
+		rescue
+			puts "Please use [-d|--domelemets] min:max"
 			exitcode = setExit(3, exitcode)
 			exit exitcode
 		end
@@ -120,6 +138,7 @@ begin
 		cmd << options[:phantomjs_extra_ops]
 		cmd << options[:snifferjs]
 		cmd << website_url.to_s
+		cmd << "'#{options[:jscheck]}'"
 		cmd << "2> /dev/null"
 		warn "PhantomJS cmd is: " + cmd.join(" ") if options[:verbosity].to_i == 3
 		@pipe = IO.popen(cmd.join(" "))
@@ -150,7 +169,7 @@ request_global_time_end   = Time.iso8601(hash['log']['pages'][0]['endedDateTime'
 request_size = hash['log']['pages'][0]['size']
 request_count = hash['log']['pages'][0]['resourcesCount'].to_i
 dom_element_count = hash['log']['pages'][0]['domElementsCount'].to_i
-
+jscheck = hash['log']['pages'][0]['jscheckout'].to_s
 website_load_time = '%.2f' % (request_global_time_end - request_global_time_start)
 website_load_time_ms = (request_global_time_end - request_global_time_start) * 1000
 website_url_info = website_url.to_s
@@ -162,6 +181,18 @@ end
 performance_data = " | load_time=#{website_load_time_ms.to_s}ms size=#{request_size} requests=#{request_count.to_s} dom_elements=#{dom_element_count.to_s}"
 output = "#{website_url_info} load time: #{website_load_time.to_s}"
 
+
+if options[:jscheck] and (jscheck != 'true')
+        if options[:verbosity] == 1
+                output = output + " (Jscheck: #{options[:jscheck]})"
+        elsif options[:verbosity] >= 2
+                output = output + " (Jscheck doesn equal true : #{options[:jscheck]})"
+        else
+                output = output + " Jscheck."
+        end
+        exitcode = setExit(1, exitcode)
+     
+end
 # Load time Warning
 if website_load_time.to_f > options[:warning].to_f and website_load_time.to_f < options[:critical].to_f
 	if options[:verbosity] == 1
@@ -206,6 +237,18 @@ if options[:size] and !request_size.between?(options[:size][0], options[:size][1
 		output = output + " (Size critical: #{options[:size][0]}:#{options[:size][1]})"
 	else
 		output = output + " Size crit."
+	end
+	exitcode = setExit(2, exitcode)
+end
+
+# Site Dom elemets Critical
+if options[:domelemets] and !dom_element_count.between?(options[:domelemets][0], options[:domelemets][1])
+	if options[:verbosity] == 1
+		output = output + " (domelemets: #{options[:domelemets][0]}:#{options[:domelemets][1]})"
+	elsif options[:verbosity] >= 2
+		output = output + " (Domelemets critical: #{options[:domelemets][0]}:#{options[:domelemets][1]})"
+	else
+		output = output + " Domelemets crit."
 	end
 	exitcode = setExit(2, exitcode)
 end
