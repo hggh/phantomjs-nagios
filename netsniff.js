@@ -79,7 +79,6 @@ function errorfunction (message, trace) {
 
 page.onError = function (message, trace) { errorfunction(message, trace) }
 phantom.onError = function (mesage, trace) { errorfunction(message, trace) }
-page.onResourceError = function (message) { errorfunction(message,'') }
 
 page.onResourceRequested = function (req) {
   page.resources[req.id] = {
