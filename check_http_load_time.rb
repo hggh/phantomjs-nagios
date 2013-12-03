@@ -173,6 +173,7 @@ jscheck = hash['log']['pages'][0]['jscheckout'].to_s
 website_load_time = '%.2f' % (request_global_time_end - request_global_time_start)
 website_load_time_ms = (request_global_time_end - request_global_time_start) * 1000
 website_url_info = website_url.to_s
+phantomjserror = hash['log']['pages'][0]['error'].to_s
 
 if options[:html]
   website_url_info = "<a href='" + website_url.to_s + "'>" + website_url.to_s + "</a>"
@@ -182,7 +183,19 @@ performance_data = " | load_time=#{website_load_time_ms.to_s}ms size=#{request_s
 output = "#{website_url_info} load time: #{website_load_time.to_s}"
 
 
-if options[:jscheck] and (jscheck != 'true')
+
+if phantomjserror != 'false'
+  if options[:verbosity] == 1
+    output = output + " Phantomjs error #{phantomjserror}"
+  elsif options[:verbosity] >= 2
+    output = output + " Phantomjs error #{phantomjserror}"
+  else
+    output = output + " Phantomjs error."
+  end
+  exitcode = setExit(2, exitcode)
+end
+
+if options[:jscheck] and (jscheck != 'true') and (phantomjserror  == 'false')
   if options[:verbosity] == 1
     output = output + " (Jscheck: #{options[:jscheck]} failed)"
   elsif options[:verbosity] >= 2
@@ -191,7 +204,6 @@ if options[:jscheck] and (jscheck != 'true')
     output = output + " Jscheck failed."
   end
   exitcode = setExit(1, exitcode)
-
 end
 # Load time Warning
 if website_load_time.to_f > options[:warning].to_f and website_load_time.to_f < options[:critical].to_f
