@@ -7,18 +7,25 @@ PhantomJS - headless WebKit
 +++++++++++++++++++++++++++
 
 This Nagios plugin uses `PhantomJS`_ for testing the load time. PhantomJS
-downloads and render the website as you are doing it with Firefox.
-
-This test fetchs also all images/css/js files.
+load and render the website as you are doing it with browser.
 
 Command line
 ++++++++++++
 
-- -u http://www.fahrrad.de/
-- -c 2.0 ``[second]``
-- -w 1.0 ``[second]``
-- -e
-- -l
+- -u, --url [STRING]
+- -w, --warning [FLOAT]
+- -c, --critical [FLOAT]
+- -p, --phantomjs [PATH]
+- -n, --netsniff [PATH]
+- -e, --html
+- -j, --jscheck [STRING]
+- -l, --ps-extra-opts [STRING]
+- -r, --request [RANGE]
+- -s, --size [RANGE]
+- -d, --domelemets [RANGE]
+- -P, --perf
+- -v, --verbose [n]
+
 
 PhantomJS Options
 +++++++++++++++++
@@ -47,14 +54,14 @@ requirements to run phantomjs-nagios
 ++++++++++++++++++++++++++++++++
 
 - ruby
-- ruby-json
+- json
 - PhantomJS 1.9 or higher (check_http_load_time.rb does not support Xvfb)
 
 run check
 +++++++++
-	check_http_load_time.rb -u http://www.fahrrad.de -w 1.9 -c 2.5 -e
+	check_http_load_time.rb --perf -c 3 -w 2 -u http://www.fahrrad.de
 
-	OK: <a href='http://www.fahrrad.de'>http://www.fahrrad.de</a> load time: 1.78 | load_time=1776.0ms size=591152 requests=99 dom_elements=997
+	OK: http://www.fahrrad.de load time: 1.59 | load_time=1590.0ms size=1058140 requests=105 dom_elements=1319 load_time_initial_req=93ms
 
 Nagios/Icinga performance data
 ++++++++++++++++++++++++++++++
@@ -63,6 +70,7 @@ Nagios/Icinga performance data
 - size: complete size of all downloaded files in byte
 - requests: count of files (css,js,html,...)
 - dom_elements: count of all DOM elements on the site
+- load_time_initial_req: the load time of the first request
 
 Contact?
 ++++++++
