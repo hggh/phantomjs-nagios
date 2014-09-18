@@ -7,7 +7,7 @@ PhantomJS - headless WebKit
 +++++++++++++++++++++++++++
 
 This Nagios plugin uses `PhantomJS`_ for testing the load time. PhantomJS
-load and render the website as you are doing it with browser.
+load and render the website as you are doing it with your browser.
 
 Command line
 ++++++++++++
