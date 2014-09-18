@@ -24,6 +24,11 @@ function createHAR(address, title, startTime, resources, endTime, dom_element_co
       }
       bodySize = bodySize + startReply.bodySize;
    });
+   // the first element of the resouces arry should be the request, so we track the load time
+   var resource_initial_load_time = 0;
+   if (resources[1] ) {
+      resource_initial_load_time = resources[1].endTime - resources[1].startTime;
+   }
    return {
       log: {
             version: '1.2',
@@ -35,6 +40,7 @@ function createHAR(address, title, startTime, resources, endTime, dom_element_co
             pages: [{
                startedDateTime: startTime.toISOString(),
                endedDateTime: endTime.toISOString(),
+               initialResourceLoadTime: resource_initial_load_time,
                id: address,
                size: bodySize,
                resourcesCount: resources.length,
@@ -74,6 +80,7 @@ else {
    page.onResourceRequested = function (req) {
       page.resources[req.id] = {
          request: req,
+         startTime: new Date(),
          startReply: null,
          endReply: null
       };
@@ -85,6 +92,7 @@ else {
       }
       if (res.stage === 'end') {
          page.resources[res.id].endReply = res;
+         page.resources[res.id].endTime = new Date();
       }
    };
 

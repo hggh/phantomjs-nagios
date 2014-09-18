@@ -169,6 +169,7 @@ request_global_time_end   = Time.iso8601(hash['log']['pages'][0]['endedDateTime'
 request_size = hash['log']['pages'][0]['size']
 request_count = hash['log']['pages'][0]['resourcesCount'].to_i
 dom_element_count = hash['log']['pages'][0]['domElementsCount'].to_i
+website_load_time_initial_request = hash['log']['pages'][0]['initialResourceLoadTime'].to_i
 jscheck = hash['log']['pages'][0]['jscheckout'].to_s
 website_load_time = '%.2f' % (request_global_time_end - request_global_time_start)
 website_load_time_ms = (request_global_time_end - request_global_time_start) * 1000
@@ -178,7 +179,7 @@ if options[:html]
   website_url_info = "<a href='" + website_url.to_s + "'>" + website_url.to_s + "</a>"
 end
 # Outputs without Errors (normal output + performance data)
-performance_data = " | load_time=#{website_load_time_ms.to_s}ms size=#{request_size} requests=#{request_count.to_s} dom_elements=#{dom_element_count.to_s}"
+performance_data = " | load_time=#{website_load_time_ms.to_s}ms size=#{request_size} requests=#{request_count.to_s} dom_elements=#{dom_element_count.to_s} load_time_initial_req=#{website_load_time_initial_request.to_s}ms"
 output = "#{website_url_info} load time: #{website_load_time.to_s}"
 
 
