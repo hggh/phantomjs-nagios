@@ -46,7 +46,7 @@ Afer installing PhantomJS with that patch use:
 requirements to run phantomjs-nagios
 ++++++++++++++++++++++++++++++++
 
-- ruby 1.8
+- ruby
 - ruby-json
 - PhantomJS 1.6 or higher (check_http_load_time.rb does not support Xvfb)
 
