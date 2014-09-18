@@ -48,16 +48,17 @@ function createHAR(address, title, startTime, resources, endTime, dom_element_co
    };
 }
 
-var page = new WebPage(), output;
+var page = require('webpage').create(),
+    system = require('system');
 page.viewportSize = { width: 1600, height: 1200 };
 
-if (phantom.args.length === 0) {
+if (system.args.length === 1) {
    console.log('Usage: netsniff.js <some URL>');
    phantom.exit();
 }
 else {
-   page.address = phantom.args[0];
-   page.jscheck = phantom.args[1];
+   page.address = system.args[1];
+   page.jscheck = system.args[2];
    page.settings.userAgent = 'hggh PhantomJS Webspeed Test';
 
    page.resources = [];
