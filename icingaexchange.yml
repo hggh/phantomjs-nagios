@@ -1,5 +1,5 @@
 name: check_http_load_time
-description: "file:///README.rst"
+description: "file:///README.md"
 url: "https://github.com/hggh/phantomjs-nagios"
 tags: loadtests, website, phantomjs, webkit
 vendor: Linux
