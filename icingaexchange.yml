@@ -1,0 +1,19 @@
+name: check_http_load_time
+description: "file:///README.rst"
+url: "https://github.com/hggh/phantomjs-nagios"
+tags: loadtests, website, phantomjs, webkit
+vendor: Linux
+target: Website
+type: Plugin
+license: Apache 2.0
+releases:
+  -
+    name: 1.0
+    description: "1.0 Release"
+    files:
+      -
+        name: check_http_load_time.rb
+        url: "file:///check_http_load_time.rb"
+        description: "Release 1.0"
+        checksum: 4961f2edb730a1f0e3b87e8fcddd21f5
+
