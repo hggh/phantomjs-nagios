@@ -6,6 +6,9 @@ require 'time'
 require 'optparse'
 require 'timeout'
 
+Encoding.default_external = Encoding::UTF_8
+Encoding.default_internal = Encoding::UTF_8
+
 options = {}
 options[:url] = ""
 options[:phantomjs_bin] = "/usr/bin/phantomjs"
